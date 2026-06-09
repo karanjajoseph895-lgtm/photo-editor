@@ -10,7 +10,7 @@ function App() {
   const [prompt, setPrompt] = useState('')
   const [isProcessing, setIsProcessing] = useState(false)
 
-  const handleImageUpload = (e: React.ChangeEvent<<HTMLInputElement>) => {
+ const handleImageUpload = (e: React.ChangeEvent<<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
       const reader = new FileReader()
