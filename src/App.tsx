@@ -1,4 +1,4 @@
-import AIPhotoEditor from "./components/AIPhotoEditor";
+import AIPhotoEditor from "./AIPhotoEditor";
 
 function App() {
   return <AIPhotoEditor />;
