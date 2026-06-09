@@ -1,0 +1,280 @@
+@font-face {
+  font-family: "Geist";
+  src: url("/fonts/Geist-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/fonts/GeistMono-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-primary: #0C0C0F;
+    --bg-secondary: #131318;
+    --bg-tertiary: #1A1A22;
+    --bg-quaternary: #22222E;
+    --accent: #6C5CE7;
+    --accent-hover: #8576F0;
+    --accent-glow: rgba(108, 92, 231, 0.15);
+    --text-primary: #F0F0F5;
+    --text-secondary: #8A8A9A;
+    --text-muted: #5A5A6A;
+    --success: #00D9A5;
+    --warning: #FFB347;
+    --error: #FF6B6B;
+    --border: rgba(255, 255, 255, 0.06);
+    --gradient-accent: linear-gradient(135deg, #6C5CE7 0%, #00D9A5 100%);
+    --glow-accent: 0 0 40px rgba(108, 92, 231, 0.3), 0 0 80px rgba(108, 92, 231, 0.1);
+    --font-sans: "Geist", system-ui, -apple-system, sans-serif;
+    --font-mono: "Geist Mono", "SF Mono", monospace;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 30px rgba(108, 92, 231, 0.2);
+    --shadow-inset: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 6% 7%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 6% 7%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 252 75% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 5% 15%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 5% 15%;
+    --muted-foreground: 240 5% 55%;
+    --accent-hsl: 252 75% 60%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border-hsl: 0 0% 100% / 0.06;
+    --input: 0 0% 100% / 0.06;
+    --ring: 252 75% 60%;
+    --radius: 0.75rem;
+  }
+
+  * {
+    border-color: hsl(var(--border-hsl));
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
+  }
+}
+
+@layer components {
+  .btn-generate {
+    background: linear-gradient(135deg, #6C5CE7, #00D9A5, #6C5CE7);
+    background-size: 200% 200%;
+    animation: gradientFlow 3s ease infinite, glowPulse 2s ease-in-out infinite;
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .btn-generate:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+  }
+
+  .btn-generate:active {
+    transform: translateY(0) scale(0.98);
+  }
+
+  .btn-generate:disabled {
+    background: var(--bg-quaternary);
+    animation: none;
+    color: var(--text-muted);
+    cursor: not-allowed;
+    filter: none;
+    transform: none;
+  }
+
+  .btn-generate.processing {
+    position: relative;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0.9;
+  }
+
+  .btn-generate.processing::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  .gallery-item {
+    opacity: 0;
+    transform: scale(0.85);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .gallery-item.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .gallery-grid:hover .gallery-item {
+    opacity: 0.5;
+    transform: scale(0.95);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .gallery-grid:hover .gallery-item:hover {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+
+  .image-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: opacity 0.4s ease;
+  }
+
+  .image-layer.edited {
+    opacity: 0;
+  }
+
+  .image-layer.edited.visible {
+    opacity: 1;
+  }
+
+  .image-layer.edited.split {
+    opacity: 1;
+    clip-path: inset(0 50% 0 0);
+  }
+
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hidden {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(108, 92, 231, 0.3), 0 0 40px rgba(108, 92, 231, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(108, 92, 231, 0.5), 0 0 60px rgba(108, 92, 231, 0.2);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes slide-in-down {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slide-out-up {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-100%); opacity: 0; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse-scale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.01); }
+}
+
+@keyframes pulse-overlay {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 0.1; }
+}
+
+@keyframes shrink {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+/* Range input styling */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 9999px;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #6C5CE7;
+  border: 2px solid #fff;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(108, 92, 231, 0.3);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #6C5CE7;
+  border: 2px solid #fff;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(108, 92, 231, 0.3);
+}
