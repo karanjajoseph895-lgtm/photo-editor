@@ -5,10 +5,8 @@ import { defineConfig } from "vite"
 import { inspectAttr } from 'kimi-plugin-inspect-react'
 
 export default defineConfig({
-  plugins: [
-    react(),
-    inspectAttr()
-  ],
+  envPrefix: "VITE_",
+  plugins: [react(), inspectAttr()],
   server: {
     port: 3000,
   },
